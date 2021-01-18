@@ -77,17 +77,17 @@ let FILTER = {
 }
 const CALENDAR = jsCalendar.new({
 	target: '#calendar',
-	firstDayOfTheWeek: "2",
-	monthFormat: "month YYYY",
-	language : "sk"
+	firstDayOfTheWeek: '2',
+	monthFormat: 'month YYYY',
+	language : 'sk'
 })
 
 const open_modal = () => {
-	document.getElementById("filter-modal").style.display = "block"
+	document.getElementById('filter-modal').style.display = 'block'
 }
 
 const close_modal = () => {
-	document.getElementById("filter-modal").style.display = "none"
+	document.getElementById('filter-modal').style.display = 'none'
 }
 
 const sorting_key = (event) => {
@@ -140,7 +140,7 @@ const fmt_contestant = (contestant, prev_contestant) => {
 		return contestant.substr(2)
 	}
 
-	return CONSTANTS.contestant_types[contestant.substr(0, 2)] + " " + contestant.substr(2)
+	return CONSTANTS.contestant_types[contestant.substr(0, 2)] + ' ' + contestant.substr(2)
 }
 
 const fmt = {
@@ -174,22 +174,22 @@ const fmt = {
 
 	pretty_contestants: function (event) {
 		if (!event.contestants.min && !event.contestants.max) {
-			return "ktokoľvek"
+			return 'ktokoľvek'
 		}
 
 		if (!event.contestants.min && event.contestants.max) {
-			return fmt_contestant(event.contestants.max) + " a mladší"
+			return fmt_contestant(event.contestants.max) + ' a mladší'
 		}
 
 		if (event.contestants.min && !event.contestants.max) {
-			return fmt_contestant(event.contestants.min) + " a starší"
+			return fmt_contestant(event.contestants.min) + ' a starší'
 		}
 
 		if (event.contestants.min == event.contestants.max) {
 			return fmt_contestant(event.contestants.min)
 		}
 
-		return fmt_contestant(event.contestants.min) + " – " + fmt_contestant(event.contestants.max, event.contestants.min)
+		return fmt_contestant(event.contestants.min) + ' – ' + fmt_contestant(event.contestants.max, event.contestants.min)
 	},
 
 	pretty_sciences: function (event) {
@@ -269,19 +269,21 @@ const render = () => {
 	visible_events.forEach((event, index) => {
 		event.id = index
 	})
-
-	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events}, {partial : PARTIAL_TEMPLATE});
-
-	[...document.getElementsByClassName("js-event-header")].forEach(node => {
-		node.addEventListener("click", () => {
-			node.parentElement.querySelector(".js-event-description").classList.toggle("hidden")
-			node.querySelector(".js-event-icons").classList.toggle("hidden")
-		})
-	})
-
+	
 	const event = visible_events.find(event =>
 		new Date(event.date.end || event.date.start) >= new Date()
 	)
+
+	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events.slice(Math.max(parseInt(event.id, 10) - 5, 0), Math.min(parseInt(event.id, 10) + 20, visible_events.length))}, {partial : PARTIAL_TEMPLATE});
+
+	document.querySelectorAll('.js-event-header').forEach(node => {
+		node.addEventListener('click', () => {
+			node.parentElement.querySelector('.js-event-description').classList.toggle('hidden')
+			node.querySelector('.js-event-icons').classList.toggle('hidden')
+		})
+	})
+
+
 	if (event) {
 		is_initial_scroll = true
 		scroll_to_id(`event-item-${event.id}`)
@@ -289,10 +291,10 @@ const render = () => {
 }
 
 const insert_event = (node, color) => {
-	let event_dot = document.createElement("div")
-	event_dot.setAttribute("class", "w-2 h-2 rounded-full")
+	let event_dot = document.createElement('div')
+	event_dot.setAttribute('class', 'w-2 h-2 rounded-full')
 	event_dot.style.backgroundColor = color
-	event_dot.style.margin = ".1rem"
+	event_dot.style.margin = '.1rem'
 	node.appendChild(event_dot)
 }
 
@@ -302,35 +304,35 @@ const setup_calendar = () => {
 
 	// Render header
 	CALENDAR.onMonthRender(function(index, element, info) {
-		document.getElementById("js-calendar-placeholder-month").innerText = element.innerText
+		document.getElementById('js-calendar-placeholder-month').innerText = element.innerText
 
 		if(!rendered) {
 			rendered = true;
-			let icon = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-			icon.setAttribute("viewBox", "0 0 24 24")
-			icon.setAttribute("width", "24")
-			icon.setAttribute("height", "24")
-			icon.setAttribute("fill", "none")
-			icon.setAttribute("stroke", "currentColor")
-			icon.setAttribute("stroke-width", "2")
-			icon.setAttribute("stroke-linecap", "round")
-			icon.setAttribute("stroke-linejoin", "round")
+			let icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+			icon.setAttribute('viewBox', '0 0 24 24')
+			icon.setAttribute('width', '24')
+			icon.setAttribute('height', '24')
+			icon.setAttribute('fill', 'none')
+			icon.setAttribute('stroke', 'currentColor')
+			icon.setAttribute('stroke-width', '2')
+			icon.setAttribute('stroke-linecap', 'round')
+			icon.setAttribute('stroke-linejoin', 'round')
 			// Setup arrows & filter
 			//filter icon
 			let filter = icon.cloneNode()
-			filter.setAttribute("class", "md:hidden")
-			filter.setAttribute("style", "margin: 10px 8px;")	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
+			filter.setAttribute('class', 'md:hidden')
+			filter.setAttribute('style', 'margin: 10px 8px;')	// We can't use tailwind, because .jsCalendar * sets everything to 0 and takes precedence.
 			filter.innerHTML = '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>'
-			filter.addEventListener("click", open_modal)
-			element.parentElement.getElementsByClassName("jsCalendar-title-right")[0].appendChild(filter)
+			filter.addEventListener('click', open_modal)
+			element.parentElement.getElementsByClassName('jsCalendar-title-right')[0].appendChild(filter)
 			//right arrow
 			let right_arrow = icon.cloneNode()
 			right_arrow.innerHTML = '<line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>';
-			element.parentElement.getElementsByClassName("jsCalendar-nav-right")[0].appendChild(right_arrow)
+			element.parentElement.getElementsByClassName('jsCalendar-nav-right')[0].appendChild(right_arrow)
 			//left arrow
 			let left = icon.cloneNode()
 			left.innerHTML = '<line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline>';
-			element.parentElement.getElementsByClassName("jsCalendar-nav-left")[0].appendChild(left)
+			element.parentElement.getElementsByClassName('jsCalendar-nav-left')[0].appendChild(left)
 		}
 	});
 
@@ -349,9 +351,9 @@ const setup_calendar = () => {
 		}
 
 		// Insert event container
-		let event_container = document.createElement("div")
-		event_container.setAttribute("class", "flex justify-center flex-wrap")
-		event_container.style.maxHeight = "20px";
+		let event_container = document.createElement('div')
+		event_container.setAttribute('class', 'flex justify-center flex-wrap')
+		event_container.style.maxHeight = '20px';
 		element.appendChild(event_container)
 
 		// Load from data
@@ -413,10 +415,11 @@ document.querySelectorAll('.js-filter-checkbox').forEach((elem) => elem.onchange
 		filter_update_checked()
 	}
 
-	load_data()
+	render()
+	CALENDAR.refresh()
 })
 
-window.addEventListener("keydown", e => {
+window.addEventListener('keydown', e => {
 	if(!e.isComposing && e.keyCode === 27){
 		close_modal()
 	}
@@ -424,7 +427,7 @@ window.addEventListener("keydown", e => {
 
 
 let last_scroll = document.getElementById('scroll').scrollTop
-document.getElementById('scroll').addEventListener("scroll", e => {
+document.getElementById('scroll').addEventListener('scroll', e => {
 	let new_scroll = document.getElementById('scroll').scrollTop
 	if (is_initial_scroll) {
 		last_scroll = new_scroll
@@ -434,31 +437,31 @@ document.getElementById('scroll').addEventListener("scroll", e => {
 
 	last_scroll = Math.min(last_scroll, new_scroll)
 	if (Math.abs(new_scroll - last_scroll) > 200) {
-		document.getElementById("js-calendar-placeholder").classList.remove("hidden")
-		document.getElementById("js-calendar-holder").classList.add("hidden")
+		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
+		document.getElementById('js-calendar-holder').classList.add('hidden')
 	}
 })
 
 
-document.getElementById("js-calendar-placeholder-filter").addEventListener("click", open_modal)
-document.getElementById("js-calendar-placeholder-open").addEventListener("click", () => {
-	document.getElementById("js-calendar-placeholder").classList.add("hidden")
-	document.getElementById("js-calendar-holder").classList.remove("hidden")
+document.getElementById('js-calendar-placeholder-filter').addEventListener('click', open_modal)
+document.getElementById('js-calendar-placeholder-open').addEventListener('click', () => {
+	document.getElementById('js-calendar-placeholder').classList.add('hidden')
+	document.getElementById('js-calendar-holder').classList.remove('hidden')
 	last_scroll = document.getElementById('scroll').scrollTop
 })
 
 
 let switched = false;
 
-[...document.getElementsByClassName("double-slider")].forEach(parent => {
+document.querySelectorAll('.double-slider').forEach(parent => {
 	parent.addEventListener('focusin', e => {
-		if(e.target.className == "va") {
-			parent.classList.toggle("switched");
+		if(e.target.className == 'va') {
+			parent.classList.toggle('switched');
 		}
 	}, false);
 	parent.addEventListener('focusout', e => {
-		if(e.target.className == "va") {
-			parent.classList.toggle("switched");
+		if(e.target.className == 'va') {
+			parent.classList.toggle('switched');
 		}
 	}, false);
 	parent.addEventListener('input', e => {
@@ -468,17 +471,18 @@ let switched = false;
 			el.nextElementSibling.firstElementChild.innerHTML = CONSTANTS.school_years[e.target.value];
 		});
 		
-		if((parseInt(document.getElementById("v1").value) < parseInt(document.getElementById("v0").value)) && !switched) {
-			e.target.parentNode.classList.toggle("switched");
+		if((parseInt(document.getElementById('v1').value) < parseInt(document.getElementById('v0').value)) && !switched) {
+			e.target.parentNode.classList.toggle('switched');
 			switched = true;
-		} else if ((parseInt(document.getElementById("v1").value) > parseInt(document.getElementById("v0").value)) && switched) {
-			e.target.parentNode.classList.toggle("switched");
+		} else if ((parseInt(document.getElementById('v1').value) > parseInt(document.getElementById('v0').value)) && switched) {
+			e.target.parentNode.classList.toggle('switched');
 			switched = false;
 		}
 
-		if (e.target.className == "va") FILTER.school[0] = e.target.value;
+		if (e.target.className == 'va') FILTER.school[0] = e.target.value;
 		else FILTER.school[1] = e.target.value;
 		
-		load_data()
+		render()
+		CALENDAR.refresh()
 	}, false);
 });
