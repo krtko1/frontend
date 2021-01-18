@@ -222,6 +222,8 @@ const TEMPLATE = document.getElementById('template-main').innerHTML;
 const PARTIAL_TEMPLATE = document.getElementById('template-event-item').innerHTML;
 let visible_events = DATA
 let is_initial_scroll = false		// used to prevent calendar from hiding during initial scroll
+let first_id = 0
+let last_id = 0
 
 const render = () => {
 	let event_list = document.getElementById('event-list')
@@ -273,8 +275,11 @@ const render = () => {
 	const event = visible_events.find(event =>
 		new Date(event.date.end || event.date.start) >= new Date()
 	)
+	
+	first_id = Math.max(parseInt(event.id, 10) - 5, 0)
+	last_id = Math.min(parseInt(event.id, 10) + 20, visible_events.length)
 
-	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events.slice(Math.max(parseInt(event.id, 10) - 5, 0), Math.min(parseInt(event.id, 10) + 20, visible_events.length))}, {partial : PARTIAL_TEMPLATE});
+	event_list.innerHTML = Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, last_id)}, {partial : PARTIAL_TEMPLATE});
 
 	document.querySelectorAll('.js-event-header').forEach(node => {
 		node.addEventListener('click', () => {
@@ -440,6 +445,8 @@ document.getElementById('scroll').addEventListener('scroll', e => {
 		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
 		document.getElementById('js-calendar-holder').classList.add('hidden')
 	}
+	
+	
 })
 
 
@@ -485,4 +492,23 @@ document.querySelectorAll('.double-slider').forEach(parent => {
 		render()
 		CALENDAR.refresh()
 	}, false);
+});
+
+document.getElementById('scroll').addEventListener('scroll', e => {
+	const { scrollTop, scrollHeight, clientHeight } = document.getElementById('scroll')
+	let event_list = document.getElementById('event-list')
+	
+	if(clientHeight + scrollTop >= scrollHeight - 20) {
+		
+		let old_last_id = last_id;
+		last_id = Math.min(last_id + 3, visible_events.length)
+		event_list.insertAdjacentHTML('beforeend', Mustache.render(TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_TEMPLATE}));
+	}
+	
+	if(scrollTop < 20) {
+		let event_list = document.getElementById('event-list')
+		let old_first_id = first_id;
+		first_id = Math.max(first_id - 3, 0)
+		event_list.insertAdjacentHTML('afterbegin', Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_TEMPLATE}));
+	}
 });
