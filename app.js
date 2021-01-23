@@ -433,20 +433,35 @@ window.addEventListener('keydown', e => {
 
 let last_scroll = document.getElementById('scroll').scrollTop
 document.getElementById('scroll').addEventListener('scroll', e => {
-	let new_scroll = document.getElementById('scroll').scrollTop
+	const { scrollTop, scrollHeight, clientHeight } = document.getElementById('scroll')
+
 	if (is_initial_scroll) {
-		last_scroll = new_scroll
+		last_scroll = scrollTop
 		setTimeout(() => {is_initial_scroll = false}, 500)		// smooth scrolling can be still going on
 		return
 	}
 
-	last_scroll = Math.min(last_scroll, new_scroll)
-	if (Math.abs(new_scroll - last_scroll) > 200) {
+	last_scroll = Math.min(last_scroll, scrollTop)
+	if (Math.abs(scrollTop - last_scroll) > 200) {
 		document.getElementById('js-calendar-placeholder').classList.remove('hidden')
 		document.getElementById('js-calendar-holder').classList.add('hidden')
 	}
 	
+	let event_list = document.getElementById('event-list')
 	
+	if(clientHeight + scrollTop >= scrollHeight - 100) {
+		
+		let old_last_id = last_id;
+		last_id = Math.min(last_id + 3, visible_events.length)
+		event_list.insertAdjacentHTML('beforeend', Mustache.render(TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_TEMPLATE}));
+	}
+	
+	if(scrollTop < 100) {
+		let event_list = document.getElementById('event-list')
+		let old_first_id = first_id;
+		first_id = Math.max(first_id - 3, 0)
+		event_list.insertAdjacentHTML('afterbegin', Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_TEMPLATE}));
+	}
 })
 
 
@@ -495,23 +510,4 @@ document.querySelectorAll('.double-slider').forEach(parent => {
 			CALENDAR.refresh();
 		}, 300);
 	}, false);
-});
-
-document.getElementById('scroll').addEventListener('scroll', e => {
-	const { scrollTop, scrollHeight, clientHeight } = document.getElementById('scroll')
-	let event_list = document.getElementById('event-list')
-	
-	if(clientHeight + scrollTop >= scrollHeight - 20) {
-		
-		let old_last_id = last_id;
-		last_id = Math.min(last_id + 3, visible_events.length)
-		event_list.insertAdjacentHTML('beforeend', Mustache.render(TEMPLATE, {data: visible_events.slice(old_last_id, last_id)}, {partial : PARTIAL_TEMPLATE}));
-	}
-	
-	if(scrollTop < 20) {
-		let event_list = document.getElementById('event-list')
-		let old_first_id = first_id;
-		first_id = Math.max(first_id - 3, 0)
-		event_list.insertAdjacentHTML('afterbegin', Mustache.render(TEMPLATE, {data: visible_events.slice(first_id, old_first_id)}, {partial : PARTIAL_TEMPLATE}));
-	}
 });
