@@ -148,7 +148,7 @@ theme: {
     },
     extend: {
       spacing: {
-        '90': '23rem',
+        '87': '21.75rem',
       },
       cursor: {
         grab: 'grab',
