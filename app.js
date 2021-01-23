@@ -437,7 +437,13 @@ document.getElementById('scroll').addEventListener('scroll', e => {
 
 	if (is_initial_scroll) {
 		last_scroll = scrollTop
-		setTimeout(() => {is_initial_scroll = false}, 500)		// smooth scrolling can be still going on
+		setTimeout(() => {
+			is_initial_scroll = false		// smooth scrolling can be still going on
+			setInterval(() => {
+				let scroll = document.getElementById('scroll')
+				if(scroll.scrollTop == 0) scroll.scroll(0,2)
+			}, 100)
+		}, 500)
 		return
 	}
 
