@@ -274,7 +274,7 @@ const render = () => {
 	
 	const event = visible_events.find(event =>
 		new Date(event.date.end || event.date.start) >= new Date()
-	)
+	) ?? visible_events[visible_events.length - 1]
 	
 	first_id = Math.max(parseInt(event.id, 10) - 5, 0)
 	last_id = Math.min(parseInt(event.id, 10) + 20, visible_events.length)
