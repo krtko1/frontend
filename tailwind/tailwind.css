@@ -162,3 +162,7 @@ input:checked + .slider:before {
 .double-slider > output > span {
 	@apply block rounded px-1.5 text-white transition duration-300 transform-gpu -translate-x-1/2 bg-blue;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+  display: none;
+}
