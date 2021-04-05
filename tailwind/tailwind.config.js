@@ -1,5 +1,14 @@
 // tailwind.config.js
 module.exports = {
+  purge:
+    {
+      enabled: true,
+      content: [
+        '../*.html',
+        '../*.js',
+      ]
+    },
+  darkMode: 'media',
   theme: {
     colors: {
       transparent: 'transparent',

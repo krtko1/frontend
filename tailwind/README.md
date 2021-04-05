@@ -1,13 +1,15 @@
 ## Install requirements
 
-`npm install tailwindcss@2.0.2 --no-save`
+`npm install -D @tailwindcss/jit tailwindcss postcss autoprefixer`
 
 
-## Generate developer Tailwindcss build:
+## Generating developer Tailwindcss build:
 
-`npx tailwindcss build tailwind.css > build.css`
+While editting styles keep running
 
-This will produce all classes used by Tailwindcss.
+`npm run build`
+
+This will interactively produce all classes used in code.
 
 
 ## Generate production Tailwindcss build:
