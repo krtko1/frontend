@@ -23,7 +23,6 @@ jobs:
           persist-credentials: false
 
       - name: Install tailwind
-        run: cd tailwind && npm install tailwindcss@2.0.2 --no-save
         run: cd tailwind && npm install @tailwindcss/jit tailwindcss postcss autoprefixer --no-save
 
       - name: Build 🔧
