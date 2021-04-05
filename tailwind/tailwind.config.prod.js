@@ -148,6 +148,7 @@ theme: {
     },
     extend: {
       spacing: {
+        '18': '4.5rem',
         '87': '21.75rem',
       },
       cursor: {
